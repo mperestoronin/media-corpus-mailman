@@ -24,3 +24,20 @@ jobs:
         run: |
           docker build . --tag ghcr.io/mperestoronin/mailman:latest
           docker push ghcr.io/mperestoronin/mailman:latest
+  deploy:
+    env:
+      REPO: ${{ github.event.repository.name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Redeploy compose stack
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          script: |
+            cd ~/media-corpus-classifier
+            docker compose -f docker-compose.kafka.yml pull
+            docker compose -f docker-compose.kafka.yml up -d --force-recreate --wait
+            docker ps
