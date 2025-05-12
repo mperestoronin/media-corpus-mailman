@@ -25,6 +25,7 @@ jobs:
           docker build . --tag ghcr.io/mperestoronin/mailman:latest
           docker push ghcr.io/mperestoronin/mailman:latest
   deploy:
+    needs: build_and_publish
     env:
       REPO: ${{ github.event.repository.name }}
     runs-on: ubuntu-latest
