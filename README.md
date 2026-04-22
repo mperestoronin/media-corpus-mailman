@@ -1,0 +1,1 @@
+Mailman service for crosswords
